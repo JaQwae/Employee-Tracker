@@ -43,9 +43,10 @@ const userPrompt = () => {
                 ]
             }
         ])
-        .then((answers) =>
-        console.log(answers.options)
-        )
+        .then((answers) => {
+        const choiceSelected = answers.options;
+        console.log(choiceSelected);
+    })
 };
 
 userPrompt();

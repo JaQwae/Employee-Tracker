@@ -45,7 +45,34 @@ const userPrompt = () => {
         ])
         .then((answers) => {
         const choiceSelected = answers.options;
-        console.log(choiceSelected);
+        
+        if (choiceSelected === 'View all departments'){
+            console.log('showAllDepartments()')
+        } 
+
+        if (choiceSelected === 'View all roles'){
+            console.log('showAllRoles()')
+        } 
+
+        if (choiceSelected === 'View all employees'){
+            console.log('showAllEmployees()')
+        } 
+
+        if (choiceSelected === 'Add a department'){
+            console.log('addADepartment()')
+        } 
+
+        if (choiceSelected === 'Add a role'){
+            console.log('addARole()')
+        } 
+
+        if (choiceSelected === 'Add an employee'){
+            console.log('addAnEmployee()')
+        } 
+
+        if (choiceSelected === 'Update an employee role'){
+            console.log('updateAnEmployeeRole()')
+        } 
     })
 };
 

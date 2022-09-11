@@ -85,7 +85,8 @@ userPrompt();
 
 // Functionality to show all departments
 const showAllDepartments = () => {
-    const mysql = `SELECT * FROM Department`;
+    const mysql = `SELECT department.id AS ID, department.names AS Department 
+                    FROM department`;
 
     connection.query(mysql, (err, rows) => {
         if (err) throw err;
@@ -96,7 +97,9 @@ const showAllDepartments = () => {
 
 // Functionality to show all roles
 const showAllRoles = () => {
-    const mysql = `SELECT * FROM Roles`;
+    const mysql = `SELECT roles.id AS ID, roles.title AS Title, department.names AS Department 
+                    FROM roles 
+                    INNER JOIN department ON roles.department_id = department.id`;
 
     connection.query(mysql, (err, rows) => {
         if (err) throw err;

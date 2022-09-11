@@ -61,7 +61,7 @@ const userPrompt = () => {
         } 
 
         if (choiceSelected === 'Add a department'){
-            console.log('addADepartment()')
+            addADepartment()
         } 
 
         if (choiceSelected === 'Add a role'){
@@ -127,4 +127,34 @@ const showAllEmployees = () => {
         console.table(rows);
         userPrompt();
     });
+};
+
+// function to add a department 
+const addADepartment = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'addDepartment',
+            message: "What department do you want to add?",
+            validate: addDepartment => {
+                if (addDepartment) {
+                    return true;
+                } else {
+                    console.log('Please enter a department');
+                    return false;
+                }
+            }
+        }
+    ])
+        .then(answers => {
+            const sql = `INSERT INTO department (names)
+                    VALUES ?`;
+            connection.query(sql, answers.addDepartments, (err, result) => {
+                if (err) throw err;
+                console.log('Added ' + answers.addDepartments + " to departments!");
+
+                showAllDepartments();
+                userPrompt();
+            });
+        });
 };

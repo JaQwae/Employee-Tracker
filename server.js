@@ -53,7 +53,7 @@ const userPrompt = () => {
         } 
 
         if (choiceSelected === 'View all roles'){
-            console.log('showAllRoles()')
+            showAllRoles()
         } 
 
         if (choiceSelected === 'View all employees'){
@@ -86,6 +86,17 @@ userPrompt();
 // Functionality to show all departments
 const showAllDepartments = () => {
     const mysql = `SELECT * FROM Department`;
+
+    connection.query(mysql, (err, rows) => {
+        if (err) throw err;
+        console.table(rows);
+        userPrompt();
+    });
+};
+
+// Functionality to show all roles
+const showAllRoles = () => {
+    const mysql = `SELECT * FROM Roles`;
 
     connection.query(mysql, (err, rows) => {
         if (err) throw err;

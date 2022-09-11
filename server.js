@@ -15,7 +15,7 @@ const connection = mysql.createConnection(
     {
         host: 'localhost',
         user: 'root',
-        password: process.env.password,
+        password: 'password',
         database: 'company_db'
     },
     console.log('Connect to company_db')
@@ -87,9 +87,9 @@ userPrompt();
 const showAllDepartments = () => {
     const mysql = `SELECT * FROM Department`;
 
-    connection.promise().query(mysql, (err, rows) => {
+    connection.query(mysql, (err, rows) => {
         if (err) throw err;
         console.table(rows);
-        promptUser();
+        userPrompt();
     });
 };

@@ -65,7 +65,7 @@ const userPrompt = () => {
         } 
 
         if (choiceSelected === 'Add a role'){
-            // addARole();
+            addARole();
         } 
 
         if (choiceSelected === 'Add an employee'){
@@ -162,6 +162,48 @@ const addADepartment = () => {
 };
 
 // functionality to add a role (prompted to enter the name, salary, and department for the role and that role is added to the database)
+const addARole = async () => {
+
+const departments = await showAllDepartments();
+const responses = await inquirer
+        .prompt([
+            {
+                name: 'title',
+                type: 'input',
+                message: 'What is the new role? ',
+            },
+            {
+                name: 'salary',
+                type: 'number',
+                message: "What is the role's salary? ",
+            },
+            {
+                name: 'department',
+                type: 'list',
+                choices: departments.map(department => department.names),
+                message: 'What department is the role in? '
+            }
+        ])
+
+    departments.forEach(department => {
+        if (department.names === responses.department) {
+            responses.department = department.id;
+        }
+    });
+
+    then(answers => {
+        const mysql = `INSERT INTO roles (title, salary, department_id)
+                        VALUES ('${answers.title, answers.salary, answers.department.id}')`
+
+        connection.query(mysql, answers.title, answers.salary, answers.department.id, (err, result) => {
+            if (err) throw err;
+            console.log('Added ' + answers.title + answers.salary + answers.department.id + " to departments!");
+
+            showAllRoles();
+            userPrompt();
+        });
+    });
+}
 
 // functionality to add an employee (prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database)
 

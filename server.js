@@ -61,11 +61,11 @@ const userPrompt = () => {
         } 
 
         if (choiceSelected === 'Add a department'){
-            addADepartment()
+            addADepartment();
         } 
 
         if (choiceSelected === 'Add a role'){
-            console.log('addARole()')
+            // addARole();
         } 
 
         if (choiceSelected === 'Add an employee'){
@@ -77,7 +77,8 @@ const userPrompt = () => {
         } 
 
         if (choiceSelected === 'Exit program'){
-            console.log('exitProgram()')
+            connection.end();
+            console.log('Press Ctrl + C keys to close the server.')
         } 
     })
 }
@@ -147,10 +148,10 @@ const addADepartment = () => {
         }
     ])
         .then(answers => {
-            const sql = `INSERT INTO department (names)
+            const mysql = `INSERT INTO department (names)
                         VALUES ('${answers.addDepartment}')`
 
-            connection.query(sql, answers.addDepartments, (err, result) => {
+            connection.query(mysql, answers.addDepartments, (err, result) => {
                 if (err) throw err;
                 console.log('Added ' + answers.addDepartments + " to departments!");
 
@@ -159,3 +160,9 @@ const addADepartment = () => {
             });
         });
 };
+
+// functionality to add a role (prompted to enter the name, salary, and department for the role and that role is added to the database)
+
+// functionality to add an employee (prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database)
+
+// functionality to update an employee role (prompted to select an employee to update and their new role and this information is updated in the database)

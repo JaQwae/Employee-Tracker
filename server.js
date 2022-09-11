@@ -53,11 +53,11 @@ const userPrompt = () => {
         } 
 
         if (choiceSelected === 'View all roles'){
-            showAllRoles()
+            showAllRoles();
         } 
 
         if (choiceSelected === 'View all employees'){
-            console.log('showAllEmployees()')
+            showAllEmployees();
         } 
 
         if (choiceSelected === 'Add a department'){
@@ -100,6 +100,27 @@ const showAllRoles = () => {
     const mysql = `SELECT roles.id AS ID, roles.title AS Title, department.names AS Department 
                     FROM roles 
                     INNER JOIN department ON roles.department_id = department.id`;
+
+    connection.query(mysql, (err, rows) => {
+        if (err) throw err;
+        console.table(rows);
+        userPrompt();
+    });
+};
+
+// Functionality to show all employees
+const showAllEmployees = () => {
+    const mysql = `SELECT employee.id AS ID, 
+                    employee.first_name AS 'First Name', 
+                    employee.last_name AS 'Last Name', 
+                    roles.title AS Title, 
+                    department.names AS Department,
+                    roles.salary AS Salary, 
+                    CONCAT (manager.first_name, " ", manager.last_name) AS Manager
+                    FROM employee
+                        LEFT JOIN roles ON employee.roles_id = roles.id
+                        LEFT JOIN department ON roles.department_id = department.id
+                        LEFT JOIN employee manager ON employee.manager_id = manager.id`;
 
     connection.query(mysql, (err, rows) => {
         if (err) throw err;

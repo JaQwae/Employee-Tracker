@@ -1,30 +1,31 @@
-// const express = require('express');
+const express = require('express');
 const inquirer = require('inquirer');
-// const mysql = require('mysql2');
-// const table = require('console.table');
+const mysql = require('mysql2');
+const table = require('console.table');
 
-// const PORT = process.env.PORT || 3001;
-// const app = express();
+const PORT = process.env.PORT || 3001;
+const app = express();
 
-// // Express middleware
-// app.use(express.urlencoded({extended: false}));
-// app.use(express.json());
+// Express middleware
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
 
 // Connect to database
-// const db = mysql.createConnection(
-//     {
-//         host: 'localhost',
-//         user: 'root',
-//         password: 'password',
-//         database: 'company_db'
-//     },
-//     console.log('Connect to company_db')
-// );
+const connection = mysql.createConnection(
+    {
+        host: 'localhost',
+        user: 'root',
+        password: process.env.password,
+        database: 'company_db'
+    },
+    console.log('Connect to company_db')
+);
 
-// app.listen(PORT, () => {
-//     console.log(`Server running on port ${PORT}`);
-// });
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
 
+// main selector
 const userPrompt = () => {
     inquirer
         .prompt([
@@ -39,7 +40,8 @@ const userPrompt = () => {
                     'Add a department',
                     'Add a role',
                     'Add an employee',
-                    'Update an employee role'
+                    'Update an employee role',
+                    'Exit program'
                 ]
             }
         ])
@@ -47,7 +49,7 @@ const userPrompt = () => {
         const choiceSelected = answers.options;
         
         if (choiceSelected === 'View all departments'){
-            console.log('showAllDepartments()')
+            showAllDepartments();
         } 
 
         if (choiceSelected === 'View all roles'){
@@ -73,7 +75,21 @@ const userPrompt = () => {
         if (choiceSelected === 'Update an employee role'){
             console.log('updateAnEmployeeRole()')
         } 
-    })
-};
 
+        if (choiceSelected === 'Exit program'){
+            console.log('exitProgram()')
+        } 
+    })
+}
 userPrompt();
+
+// Functionality to show all departments
+const showAllDepartments = () => {
+    const mysql = `SELECT * FROM Department`;
+
+    connection.promise().query(mysql, (err, rows) => {
+        if (err) throw err;
+        console.table(rows);
+        promptUser();
+    });
+};

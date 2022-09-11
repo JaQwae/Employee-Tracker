@@ -1,4 +1,3 @@
--- Do I need this for functionality
 DROP DATABASE IF EXISTS company_db;
 CREATE DATABASE company_db;
 

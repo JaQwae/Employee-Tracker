@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 // Express middleware
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Connect to database
@@ -46,41 +46,41 @@ const userPrompt = () => {
             }
         ])
         .then((answers) => {
-        const choiceSelected = answers.options;
-        
-        if (choiceSelected === 'View all departments'){
-            showAllDepartments();
-        } 
+            const choiceSelected = answers.options;
 
-        if (choiceSelected === 'View all roles'){
-            showAllRoles();
-        } 
+            if (choiceSelected === 'View all departments') {
+                showAllDepartments();
+            }
 
-        if (choiceSelected === 'View all employees'){
-            showAllEmployees();
-        } 
+            if (choiceSelected === 'View all roles') {
+                showAllRoles();
+            }
 
-        if (choiceSelected === 'Add a department'){
-            addADepartment();
-        } 
+            if (choiceSelected === 'View all employees') {
+                showAllEmployees();
+            }
 
-        if (choiceSelected === 'Add a role'){
-            addARole();
-        } 
+            if (choiceSelected === 'Add a department') {
+                addADepartment();
+            }
 
-        if (choiceSelected === 'Add an employee'){
-            console.log('addAnEmployee()')
-        } 
+            if (choiceSelected === 'Add a role') {
+                addARole();
+            }
 
-        if (choiceSelected === 'Update an employee role'){
-            console.log('updateAnEmployeeRole()')
-        } 
+            if (choiceSelected === 'Add an employee') {
+                addAnEmployee()
+            }
 
-        if (choiceSelected === 'Exit program'){
-            connection.end();
-            console.log('Press Ctrl + C keys to close the server.')
-        } 
-    })
+            if (choiceSelected === 'Update an employee role') {
+                console.log('updateAnEmployeeRole()')
+            }
+
+            if (choiceSelected === 'Exit program') {
+                connection.end();
+                console.log('Press Ctrl + C keys to close the server.')
+            }
+        })
 }
 userPrompt();
 
@@ -98,7 +98,7 @@ const showAllDepartments = () => {
 
 // Functionality to show all roles
 const showAllRoles = () => {
-    const mysql = `SELECT roles.id AS ID, roles.title AS Title, department.names AS Department 
+    const mysql = `SELECT roles.id AS ID, roles.title AS Title, roles.salary, department.names AS Department 
                     FROM roles 
                     INNER JOIN department ON roles.department_id = department.id`;
 
@@ -164,8 +164,20 @@ const addADepartment = () => {
 // functionality to add a role (prompted to enter the name, salary, and department for the role and that role is added to the database)
 const addARole = async () => {
 
-const departments = await showAllDepartments();
-const responses = await inquirer
+    // const departments = await showAllDepartments();
+
+    let allDeptChoices = await connection
+        .promise()
+        .query(`SELECT department.id AS ID, department.names AS Department FROM department`)
+        .then(([rows]) => {
+            let departments = rows;
+            const departmentChoices = departments.map(({ ID, Department }) => ({
+                name: Department,
+                value: ID,
+            }));
+            return departmentChoices;
+        });
+    const responses = await inquirer
         .prompt([
             {
                 name: 'title',
@@ -180,31 +192,91 @@ const responses = await inquirer
             {
                 name: 'department',
                 type: 'list',
-                choices: department.map(department => department.names),
-                message: 'What department is the role in? '
-            }
+                choices: allDeptChoices,
+                message: 'What department is the role in? ',
+            },
         ])
+        .then((answers) => {
+            const mysql = `INSERT INTO roles (title, salary, department_id) VALUES ('${answers.title}', '${answers.salary}', '${answers.department}')`;
 
-    department.forEach(department => {
-        if (department.names === responses.department) {
-            responses.department = department.id;
-        }
-    });
+            connection.query(
+                mysql,
+                (err, result) => {
+                    if (err) throw err;
+                    console.log(
+                        'Added ' +
+                        answers.title +
+                        answers.salary +
+                        answers.department.id +
+                        ' to departments!'
+                    );
 
-    then(answers => {
-        const mysql = `INSERT INTO roles (title, salary, department_id)
-                        VALUES ('${answers.title, answers.salary, answers.department.id}')`
-
-        connection.query(mysql, answers.title, answers.salary, answers.department.id, (err, result) => {
-            if (err) throw err;
-            console.log('Added ' + answers.title + answers.salary + answers.department.id + " to departments!");
-
-            showAllRoles();
-            userPrompt();
+                    showAllRoles();
+                    userPrompt();
+                }
+            );
         });
-    });
-}
+};
 
 // functionality to add an employee (prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database)
+const addAnEmployee = async () => {
+
+    connection.query('Select * FROM role', async (err, roles) => {
+        if (err) throw err;
+
+        connection.query('Select * FROM employee WHERE manager_id IS NULL', async (err, managers) => {
+            if (err) throw err;
+
+            managers = managers.map(manager => ({ name: manager.first_name + " " + manager.last_name, value: manager.id }));
+            managers.push({ name: "None" });
+
+            const responses = await inquirer
+                .prompt([
+                    {
+                        type: "input",
+                        message: "What is the employee's first name? ",
+                        name: "first_name"
+                    },
+                    {
+                        type: "input",
+                        message: "What is the employee's last name? ",
+                        name: "last_name"
+                    },
+                    {
+                        type: "list",
+                        message: "What is the employee's role? ",
+                        choices: roles.map(role => ({ name: role.title, value: role.id })),
+                        name: "role_id"
+                    },
+                    {
+                        type: "list",
+                        message: "Who is the employee's manager? ",
+                        choices: managers,
+                        name: "manager_id"
+                    }
+                ])
+
+            if (responses.manager_id === "None") {
+                responses.manager_id = null;
+            }
+
+            connection.query(
+                'INSERT INTO employee SET ?',
+                {
+                    first_name: responses.first_name,
+                    last_name: responses.last_name,
+                    roles_id: responses.roles_id,
+                    manager_id: responses.manager_id
+                },
+                (err, res) => {
+                    if (err) throw err;
+                    console.log("New employee added.\n");
+                    showAllEmployees();
+                    userPrompt();
+                }
+            )
+        })
+    })
+}
 
 // functionality to update an employee role (prompted to select an employee to update and their new role and this information is updated in the database)

@@ -221,7 +221,7 @@ const addARole = async () => {
 // functionality to add an employee (prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database)
 const addAnEmployee = async () => {
 
-    connection.query('Select * FROM role', async (err, roles) => {
+    connection.query('Select * FROM employee', async (err, roles) => {
         if (err) throw err;
 
         connection.query('Select * FROM employee WHERE manager_id IS NULL', async (err, managers) => {

@@ -180,12 +180,12 @@ const responses = await inquirer
             {
                 name: 'department',
                 type: 'list',
-                choices: departments.map(department => department.names),
+                choices: department.map(department => department.names),
                 message: 'What department is the role in? '
             }
         ])
 
-    departments.forEach(department => {
+    department.forEach(department => {
         if (department.names === responses.department) {
             responses.department = department.id;
         }

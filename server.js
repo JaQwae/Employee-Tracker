@@ -260,21 +260,27 @@ const addAnEmployee = async () => {
                 responses.manager_id = null;
             }
 
-            connection.query(
-                'INSERT INTO employee SET ?',
-                {
-                    first_name: responses.first_name,
-                    last_name: responses.last_name,
-                    roles_id: responses.roles_id,
-                    manager_id: responses.manager_id
-                },
-                (err, res) => {
-                    if (err) throw err;
-                    console.log("New employee added.\n");
-                    showAllEmployees();
-                    userPrompt();
-                }
-            )
+            then((answers) => {
+                const mysql = `INSERT INTO employee (first_name, last_name, roles_id, manager_id) VALUES ('${answers.title}', '${answers.salary}', '${answers.department}')`;
+    
+                connection.query(
+                    mysql,
+                    (err, result) => {
+                        if (err) throw err;
+                        console.log(
+                            'Added ' +
+                            answers.first_name +
+                            answers.last_name +
+                            answers.roles_id +
+                            answers.manager_id +
+                            ' to departments!'
+                        );
+    
+                        showAllRoles();
+                        userPrompt();
+                    }
+                );
+            });
         })
     })
 }

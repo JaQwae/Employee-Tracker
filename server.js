@@ -256,11 +256,7 @@ const addAnEmployee = async () => {
                     }
                 ])
 
-            if (responses.manager_id === "None") {
-                responses.manager_id = null;
-            }
-
-            then((answers) => {
+            .then((answers) => {
                 const mysql = `INSERT INTO employee (first_name, last_name, roles_id, manager_id) VALUES ('${answers.title}', '${answers.salary}', '${answers.department}')`;
     
                 connection.query(
@@ -281,6 +277,10 @@ const addAnEmployee = async () => {
                     }
                 );
             });
+
+            if (responses.manager_id === "None") {
+                responses.manager_id = null;
+            }
         })
     })
 }

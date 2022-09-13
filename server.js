@@ -224,11 +224,14 @@ const addAnEmployee = async () => {
     connection.query('Select * FROM employee', async (err, roles) => {
         if (err) throw err;
 
-        connection.query('Select * FROM employee WHERE manager_id IS NULL', async (err, managers) => {
+        
+        connection.query('Select * FROM employee WHERE manager_id IS NULL', async (err, managers, roles) => {
             if (err) throw err;
 
             managers = managers.map(manager => ({ name: manager.first_name + " " + manager.last_name, value: manager.id }));
             managers.push({ name: "None" });
+
+            roles = roles.map(roles => ({ name: roles.title, value: roles.id }));
 
             const responses = await inquirer
                 .prompt([
@@ -245,8 +248,8 @@ const addAnEmployee = async () => {
                     {
                         type: "list",
                         message: "What is the employee's role? ",
-                        choices: roles.map(role => ({ name: role.title, value: role.id })),
-                        name: "role_id"
+                        choices: roles, //(roles => ({ name: roles.title, value: roles.id })),
+                        name: "roles_id"
                     },
                     {
                         type: "list",
@@ -257,8 +260,9 @@ const addAnEmployee = async () => {
                 ])
 
             .then((answers) => {
-                const mysql = `INSERT INTO employee (first_name, last_name, roles_id, manager_id) VALUES ('${answers.title}', '${answers.salary}', '${answers.department}')`;
-    
+                console.log(answers);
+                const mysql = `INSERT INTO employee (first_name, last_name, roles_id, manager_id) VALUES ('${answers.title}', '${answers.salary}', '${answers.department}', '${answers.manager_id}')`;
+                
                 connection.query(
                     mysql,
                     (err, result) => {
@@ -271,16 +275,18 @@ const addAnEmployee = async () => {
                             answers.manager_id +
                             ' to departments!'
                         );
-    
+
+
+                        if (answers.manager_id === "None") {
+                            answers.manager_id = null
+                        }
+
                         showAllRoles();
                         userPrompt();
                     }
                 );
             });
 
-            if (responses.manager_id === "None") {
-                responses.manager_id = null;
-            }
         })
     })
 }

@@ -73,7 +73,7 @@ const userPrompt = () => {
             }
 
             if (choiceSelected === 'Update an employee role') {
-                console.log('updateAnEmployeeRole()')
+                // updateAnEmployeeRole()
             }
 
             if (choiceSelected === 'Exit program') {
@@ -231,7 +231,9 @@ const addAnEmployee = async () => {
             managers = managers.map(manager => ({ name: manager.first_name + " " + manager.last_name, value: manager.id }));
             managers.push({ name: "None" });
 
-            roles = roles.map(roles => ({ name: roles.title, value: roles.id }));
+            
+            rolesarry = roles.map(role => ({ name: role.title, value: role.id }));
+            console.log(rolesarry);
 
             const responses = await inquirer
                 .prompt([
@@ -248,7 +250,7 @@ const addAnEmployee = async () => {
                     {
                         type: "list",
                         message: "What is the employee's role? ",
-                        choices: roles, //(roles => ({ name: roles.title, value: roles.id })),
+                        choices: rolesarry, //(roles => ({ name: roles.title, value: roles.id })),
                         name: "roles_id"
                     },
                     {
@@ -260,8 +262,8 @@ const addAnEmployee = async () => {
                 ])
 
             .then((answers) => {
-                console.log(answers);
-                const mysql = `INSERT INTO employee (first_name, last_name, roles_id, manager_id) VALUES ('${answers.title}', '${answers.salary}', '${answers.department}', '${answers.manager_id}')`;
+                // console.log(answers);
+                const mysql = `INSERT INTO employee (first_name, last_name, roles_id, manager_id) VALUES ('${answers.first_name}', '${answers.last_name}', '${answers.roles_id}', '${answers.manager_id}')`;
                 
                 connection.query(
                     mysql,
@@ -290,5 +292,6 @@ const addAnEmployee = async () => {
         })
     })
 }
+
 
 // functionality to update an employee role (prompted to select an employee to update and their new role and this information is updated in the database)

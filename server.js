@@ -221,19 +221,19 @@ const addARole = async () => {
 // functionality to add an employee (prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database)
 const addAnEmployee = async () => {
 
-    connection.query('Select * FROM employee', async (err, roles) => {
+    connection.query('Select * FROM employee', async (err) => {
         if (err) throw err;
 
         
-        connection.query('Select * FROM employee WHERE manager_id IS NULL', async (err, managers, roles) => {
+        connection.query('Select * FROM employee WHERE manager_id IS NULL', async (err, managers) => {
             if (err) throw err;
 
             managers = managers.map(manager => ({ name: manager.first_name + " " + manager.last_name, value: manager.id }));
             managers.push({ name: "None" });
 
-            
-            rolesarry = roles.map(role => ({ name: role.title, value: role.id }));
-            console.log(rolesarry);
+        connection.query('SELECT * FROM roles', async (err, roles) => {    
+            rolesArry = roles.map(roles => ({ name: roles.title, value: roles.id }));
+            console.log(rolesArry);
 
             const responses = await inquirer
                 .prompt([
@@ -250,7 +250,7 @@ const addAnEmployee = async () => {
                     {
                         type: "list",
                         message: "What is the employee's role? ",
-                        choices: rolesarry, //(roles => ({ name: roles.title, value: roles.id })),
+                        choices: rolesArry, //(roles => ({ name: roles.title, value: roles.id })),
                         name: "roles_id"
                     },
                     {
@@ -283,12 +283,12 @@ const addAnEmployee = async () => {
                             answers.manager_id = null
                         }
 
-                        showAllRoles();
+                        showAllEmployees();
                         userPrompt();
                     }
                 );
             });
-
+        });
         })
     })
 }

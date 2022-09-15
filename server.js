@@ -323,7 +323,25 @@ const updateAnEmployeeRole = async () => {
                     choices: rolesArry
                 },
             ])
-       
+            .then(function (role) {
+                var roleChange = rolesArry
+                connection.query("UPDATE employee SET WHERE ?",
+                    {
+                        last_name: role.lastName
+
+                    },
+                    {
+                        roles_id: roleChange
+
+                    },
+                    function (err) {
+                        if (err) throw err
+                        console.table(role)
+                        showAllEmployees();
+                        userPrompt();
+                    })
+
+            });
 
         });
     });

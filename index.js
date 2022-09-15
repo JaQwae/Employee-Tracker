@@ -324,8 +324,11 @@ const updateAnEmployeeRole = async () => {
                 },
             ])
             .then(function (role) {
-                var roleChange = rolesArry
-                connection.query("UPDATE employee SET WHERE ?",
+                var roleChangeLast = role.lastName;
+                var roleChange = role.role;
+                console.log(roleChangeLast);
+                console.log(roleChange);
+                connection.query("UPDATE employee SET role_id = ? WHERE last_name = ?",
                     {
                         last_name: role.lastName
 
@@ -335,6 +338,7 @@ const updateAnEmployeeRole = async () => {
 
                     },
                     function (err) {
+                        // console.log(roleChange)
                         if (err) throw err
                         console.table(role)
                         showAllEmployees();

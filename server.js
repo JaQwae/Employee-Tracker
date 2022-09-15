@@ -73,7 +73,7 @@ const userPrompt = () => {
             }
 
             if (choiceSelected === 'Update an employee role') {
-                // updateAnEmployeeRole()
+                updateAnEmployeeRole()
             }
 
             if (choiceSelected === 'Exit program') {
@@ -233,7 +233,6 @@ const addAnEmployee = async () => {
 
         connection.query('SELECT * FROM roles', async (err, roles) => {    
             rolesArry = roles.map(roles => ({ name: roles.title, value: roles.id }));
-            console.log(rolesArry);
 
             const responses = await inquirer
                 .prompt([
@@ -295,3 +294,38 @@ const addAnEmployee = async () => {
 
 
 // functionality to update an employee role (prompted to select an employee to update and their new role and this information is updated in the database)
+const updateAnEmployeeRole = async () => {
+
+    connection.query("SELECT employee.last_name, roles.title FROM employee JOIN roles ON employee.roles_id = roles.id;", function (err, res) {
+        
+        if (err) throw err
+
+    connection.query('SELECT * FROM roles', async (err, roles) => {  
+            rolesArry = roles.map(roles => ({ name: roles.title, value: roles.id }));
+            
+            inquirer.prompt([
+                {
+                    name: "lastName",
+                    type: "list",
+                    choices: function () {
+                        var lastName = [];
+                        for (var i = 0; i < res.length; i++) {
+                            lastName.push(res[i].last_name);
+                        }
+                        return lastName;
+                    },
+                    message: "What is the Employee's last name? ",
+                },
+                {
+                    name: "role",
+                    type: "list",
+                    message: "What is the Employees new title? ",
+                    choices: rolesArry
+                },
+            ])
+       
+
+        });
+    });
+
+}

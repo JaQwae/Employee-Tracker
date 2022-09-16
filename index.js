@@ -303,6 +303,7 @@ const updateAnEmployeeRole = async () => {
     connection.query('SELECT * FROM roles', async (err, roles) => {  
             rolesArry = roles.map(roles => ({ name: roles.title, value: roles.id }));
             
+
             inquirer.prompt([
                 {
                     name: "lastName",
@@ -326,17 +327,17 @@ const updateAnEmployeeRole = async () => {
             .then(function (role) {
                 var roleChangeLast = role.lastName;
                 var roleChange = role.role;
-                // console.log(roleChangeLast);
-                // console.log(roleChange);
-                connection.query("UPDATE employee SET role_id = roleChangeLast WHERE last_name = roleChange",
+                console.log(roleChangeLast);
+                console.log(roleChange);
+                connection.query(`UPDATE employee SET role_id = ${role.role} WHERE last_name = ${role.lastName}`,
                     {
                         last_name: roleChangeLast
 
                     },
-                    {
-                        roles_id: roleChange
+                    // {
+                    //     roles_id: roleChange
 
-                    },
+                    // },
 
                     (err) => {
                         if (err) throw err
@@ -351,3 +352,4 @@ const updateAnEmployeeRole = async () => {
     });
 
 }
+// instead of having the title have them select the role id

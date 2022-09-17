@@ -40,7 +40,7 @@ const userPrompt = () => {
                     'Add a department',
                     'Add a role',
                     'Add an employee',
-                    'Update an employee role',
+                    // 'Update an employee role',
                     'Exit program'
                 ]
             }
@@ -72,9 +72,9 @@ const userPrompt = () => {
                 addAnEmployee()
             }
 
-            if (choiceSelected === 'Update an employee role') {
-                updateAnEmployeeRole()
-            }
+            // if (choiceSelected === 'Update an employee role') {
+            //     updateAnEmployeeRole()
+            // }
 
             if (choiceSelected === 'Exit program') {
                 connection.end();
@@ -294,62 +294,61 @@ const addAnEmployee = async () => {
 
 
 // functionality to update an employee role (prompted to select an employee to update and their new role and this information is updated in the database)
-const updateAnEmployeeRole = async () => {
+// const updateAnEmployeeRole = async (employeeId, roleId) => {
 
-    connection.query("SELECT employee.last_name, roles.title FROM employee JOIN roles ON employee.roles_id = roles.id;", function (err, res) {
+//     connection.query("UPDATE employee SET roles_id = ? WHERE id = ?",  [roleId, employeeId], function (err, res) {
         
-        if (err) throw err
+//         if (err) throw err
 
-    connection.query('SELECT * FROM roles', async (err, roles) => {  
-            rolesArry = roles.map(roles => ({ name: roles.title, value: roles.id }));
+//     connection.query('SELECT * FROM roles', async (err, roleId) => {  
+//             rolesArry = roleId.map(roleId => ({ name: roleId.title, value: roleId.id }));
             
 
-            inquirer.prompt([
-                {
-                    name: "lastName",
-                    type: "list",
-                    choices: function () {
-                        var lastName = [];
-                        for (var i = 0; i < res.length; i++) {
-                            lastName.push(res[i].last_name);
-                        }
-                        return lastName;
-                    },
-                    message: "What is the Employee's last name? ",
-                },
-                {
-                    name: "role",
-                    type: "list",
-                    message: "What is the Employees new title? ",
-                    choices: rolesArry
-                },
-            ])
-            .then(function (role) {
-                var roleChangeLast = role.lastName;
-                var roleChange = role.role;
-                console.log(roleChangeLast);
-                console.log(roleChange);
-                connection.query(`UPDATE employee SET role_id = ${role.role} WHERE last_name = ${role.lastName}`,
-                    {
-                        last_name: roleChangeLast
+//             inquirer.prompt([
+//                 {
+//                     name: "lastName",
+//                     type: "list",
+//                     choices: function () {
+//                         var lastName = [];
+//                         for (var i = 0; i < res.length; i++) {
+//                             lastName.push(res[i].last_name);
+//                         }
+//                         return lastName;
+//                     },
+//                     message: "What is the Employee's last name? ",
+//                 },
+//                 {
+//                     name: "role",
+//                     type: "list",
+//                     message: "What is the Employees new title? ",
+//                     choices: rolesArry
+//                 },
+//             ])
+//             .then(function (role) {
+//                 var roleChangeLast = role.lastName;
+//                 var roleChange = role.role;
+//                 console.log(roleChangeLast);
+//                 console.log(roleChange);
+//                 connection.query(`UPDATE employee SET role_id = ${role.role} WHERE last_name = ${role.lastName}`,
+//                     {
+//                         last_name: roleChangeLast
 
-                    },
-                    // {
-                    //     roles_id: roleChange
+//                     },
+//                     // {
+//                     //     roles_id: roleChange
 
-                    // },
+//                     // },
 
-                    (err) => {
-                        if (err) throw err
-                        console.table(role)
-                        showAllEmployees();
-                        userPrompt();
-                    })
+//                     (err) => {
+//                         if (err) throw err
+//                         console.table(role)
+//                         showAllEmployees();
+//                         userPrompt();
+//                     })
 
-            });
+//             });
 
-        });
-    });
+//         });
+//     });
 
-}
-// instead of having the title have them select the role id
+// }

@@ -42,8 +42,9 @@ To run this application, you must complete the following steps:
 	- Delete departments, roles, and employees.
 	- View the total utilized budget of a department
 
-### Images:
-![insert image description here](.assets/images/insert video.png)
+### Video:
+
+[Employee Tracker Walkthrough](https://user-images.githubusercontent.com/105896967/194772545-ab9f7323-7850-48f6-9598-121c561f5abe.webm)
 
 ## Contributors:
 JaQwae Ellison
@@ -60,5 +61,3 @@ None
 GitHub: https://github.com/Jaqwaee
 Email: jaqwaeellison@gmail.com
 
-
-> Written with [StackEdit](https://stackedit.io/).

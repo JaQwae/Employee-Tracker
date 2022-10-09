@@ -3,7 +3,6 @@
 ## Description:
 This application allows a user to manipulate and retrieve information on all employees, roles, and departments that are associated with their company.
 
-[Deployed link](insert link)
 
 ## Table of Contents:
 ### [Installation](#installation)
@@ -16,9 +15,9 @@ This application allows a user to manipulate and retrieve information on all emp
 ## Installation:
 To run this application, you must complete the following steps:
   - First, download node.js and vs code.
-  -  Second, open the corresponding terminal for this program.
-  -  Third, input these commands in the terminal: ‘npm init’, ‘npm i inquirer’, and ‘npm i mysql2’.
-  - Next, input ‘node index’ in the terminal to initiate the application.
+  - Second, open the corresponding terminal for this program.
+  - Third, input these commands in the terminal: ```npm i```.
+  - Next, input ```npm start``` in the terminal to initiate the application.
   - Lastly, use the arrow keys and enter button to interact with the terminal.
   
   If all steps above are completed correctly, then the application should generate an employee database.
